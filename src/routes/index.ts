@@ -1,3 +1,3 @@
-import guildRoutes from './guildRoutes';
+import guildRoutes from "./guildRoutes";
 
 export default [guildRoutes];
