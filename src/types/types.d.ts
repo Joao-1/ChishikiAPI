@@ -2,28 +2,18 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
-export interface IGuild {
+
+export interface IDiscordServer {
 	id: string;
 	prefix: string;
 	language: string;
-}
-
-export interface IGuildService {
-	createGuild(guildId: string | number): Promise<any>;
-	readGuilds(querys: IQueryParams): Promise<IGuild[]>;
-}
-
-export interface IGuildRepository {
-	createGuild(guildId: string | number): Promise<Guild>;
-	findGuilds(config: FindAndCountAllConfig): Promise<IGuild[]>;
-	checkIfGuildAlreadyExists(guildId: string | number): Promise<boolean>;
 }
 
 export interface IWhereClause {
 	status?: "active" | "inactive";
 }
 
-export interface IQueryParams extends IWhereClause {
+export interface IQueryParamsRead extends IWhereClause {
 	[key: string]: any;
 	// eslint-disable-next-line prettier/prettier
 	[Symbol.iterator] = function* () {
@@ -37,9 +27,27 @@ export interface IQueryParams extends IWhereClause {
 	include: string[];
 }
 
+export interface IBodyPut {
+	prefix?: string;
+	language?: string;
+}
+
 export interface FindAndCountAllConfig {
 	offset: number;
 	limit: number;
 	where: WhereAttributeHash;
 	include: Includeable | Includeable[];
+}
+
+export interface IDiscordServerService {
+	createDiscordServer(discordServerId: string | number): Promise<any>;
+	readDiscordServers(querys: IQueryParamsRead): Promise<IDiscordServer[]>;
+	updateDiscordServer(discordServerId: string | number, newDiscordServerValues: IBodyPut): Promise<DiscordServer[]>;
+}
+
+export interface IDiscordServerRepository {
+	createDiscordServer(discordServerId: string | number): Promise<DiscordServer>;
+	findDiscordServers(config: FindAndCountAllConfig): Promise<IDiscordServer[]>;
+	checkIfDiscordServerAlreadyExists(discordServerId: string | number): Promise<boolean>;
+	updateDiscordServer(discordServerId: string | number, newDiscordServerValues: IBodyPut): Promise<DiscordServer[]>;
 }

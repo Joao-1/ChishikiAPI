@@ -10,6 +10,7 @@
         "build": "tsc",
         "start": "set NODE_ENV=production & yarn migrate & node dist/src/server.js",
         "migrate": "sequelize-cli db:migrate",
+        "undomigrate": "set NODE_ENV=dev & yarn sequelize-cli db:migrate:undo",
         "pretest": "SET NODE_ENV=test & yarn migrate",
         "test": "SET NODE_ENV=test & jest --detectOpenHandles"
     },

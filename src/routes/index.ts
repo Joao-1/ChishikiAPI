@@ -1,3 +1,3 @@
-import guildRoutes from "./guildRoutes";
+import DiscordServerRoutes from "./DiscordServerRoutes";
 
-export default [guildRoutes];
+export default [DiscordServerRoutes];
