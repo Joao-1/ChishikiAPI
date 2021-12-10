@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import ApiError from "../helpers/apiErrror";
+import ApiError from "../helpers/apiError";
 
 const errorMiddleware = (error: ApiError, request: Request, response: Response, next: NextFunction) => {
 	const { status } = error;

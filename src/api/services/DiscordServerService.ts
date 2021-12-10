@@ -1,12 +1,14 @@
-import { Includeable } from "sequelize/types";
-import ApiError from "../../helpers/apiErrror";
+import { RegisterDiscordServerError, UpdateDiscordServer } from "../../helpers/errors/errorsTypes";
+import { failure, success } from "../../helpers/errors/responseError";
+import generateReadMethodOptions from "../../helpers/generateReadMethodOptions";
 import {
-	FindAndCountAllConfig,
-	IBodyPut,
+	findDiscordServersReturn,
+	IDiscordServerBodyPut,
 	IDiscordServerRepository,
 	IDiscordServerService,
 	IQueryParamsRead,
-	IWhereClause,
+	registerDiscordServerReturn,
+	updateDiscordServerServiceReturn,
 } from "../../types/types";
 
 class DiscordServerService implements IDiscordServerService {
@@ -16,47 +18,42 @@ class DiscordServerService implements IDiscordServerService {
 		this.discordServerRepository = discordServerRepository;
 	}
 
-	async createDiscordServer(newDiscordServerId: string | number) {
-		if (await this.discordServerRepository.checkIfDiscordServerAlreadyExists(newDiscordServerId)) {
-			throw new ApiError("There is already a Discord server with this id", 409);
+	async registerDiscordServer(newDiscordServerId: string): registerDiscordServerReturn {
+		const result = await this.discordServerRepository.checkIfDiscordServerAlreadyExists(newDiscordServerId);
+
+		if (result.isFailure()) return failure(result.error);
+
+		if (result.value) {
+			return failure(RegisterDiscordServerError.DiscordServerAlreadyExistsError.create(newDiscordServerId));
 		}
+
 		const discordServerCreated = await this.discordServerRepository.createDiscordServer(newDiscordServerId);
-		return discordServerCreated;
+
+		if (discordServerCreated.isFailure()) return failure(discordServerCreated.error);
+
+		return success(discordServerCreated.value);
 	}
 
-	async readDiscordServers(querys: IQueryParamsRead) {
-		const whereClause: IWhereClause = {};
-		const includeModels: Includeable[] = [];
-		const filtersConfig: { [key: string]: any } = {
-			status: () => {
-				whereClause.status = querys.status;
-			},
-			include: () => {
-				includeModels.push(querys.include.toString());
-			},
-		};
-		for (const requestFilters in querys) {
-			if (Object.prototype.hasOwnProperty.call(querys, requestFilters)) {
-				filtersConfig[requestFilters]();
-			}
-		}
-
-		const options: FindAndCountAllConfig = {
-			offset: querys.offset || 1,
-			limit: querys.limit || 100,
-			where: whereClause,
-			include: includeModels,
-		};
-
-		const discordServer = await this.discordServerRepository.findDiscordServers(options);
-		return discordServer;
+	async readDiscordServers(querys: IQueryParamsRead): findDiscordServersReturn {
+		const servers = await this.discordServerRepository.findDiscordServers(generateReadMethodOptions(querys));
+		if (servers.isFailure()) return failure(servers.error);
+		return success(servers.value);
 	}
 
-	async updateDiscordServer(discordServerId: string | number, newDiscordServerValues: IBodyPut) {
-		if (!(await this.discordServerRepository.checkIfDiscordServerAlreadyExists(discordServerId))) {
-			throw new ApiError("There is no Discord server with this id", 404);
-		}
-		return this.discordServerRepository.updateDiscordServer(discordServerId, newDiscordServerValues);
+	async updateDiscordServer(
+		discordServerId: string,
+		newValues: IDiscordServerBodyPut
+	): updateDiscordServerServiceReturn {
+		const result = await this.discordServerRepository.checkIfDiscordServerAlreadyExists(discordServerId);
+
+		if (result.isFailure()) return failure(result.error);
+
+		if (!result.value) return failure(UpdateDiscordServer.DiscordServerDoesNotExist.create(discordServerId));
+
+		const serverUpdated = await this.discordServerRepository.updateDiscordServer(discordServerId, newValues);
+
+		if (serverUpdated.isFailure()) return failure(serverUpdated.error);
+		return success(serverUpdated.value);
 	}
 }
 

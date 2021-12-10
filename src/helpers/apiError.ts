@@ -1,4 +1,4 @@
-class ApiError extends Error {
+export default class ApiError extends Error {
 	status: number;
 
 	message: string;
@@ -9,5 +9,3 @@ class ApiError extends Error {
 		this.message = message;
 	}
 }
-
-export default ApiError;

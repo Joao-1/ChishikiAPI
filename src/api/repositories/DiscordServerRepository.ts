@@ -1,44 +1,77 @@
 import DiscordServer from "../../database/models/DiscordServers";
-import ApiError from "../../helpers/apiErrror";
-import { FindAndCountAllConfig, IDiscordServer, IDiscordServerRepository } from "../../types/types";
+import { DataBaseError } from "../../helpers/errors/errorsTypes";
+import { failure, success } from "../../helpers/errors/responseError";
+import {
+	checkIfAlreadyExistsReturn,
+	createDiscordServerReturn,
+	FindAndCountAllConfig,
+	findDiscordServersReturn,
+	IDiscordServer,
+	IDiscordServerRepository,
+} from "../../types/types";
+import { updateDiscordServerReturn } from "../../types/types.d";
 
 class DiscordServerRepository implements IDiscordServerRepository {
-	async createDiscordServer(newDiscordServerId: string | number) {
-		const newDiscordServer = await DiscordServer.create({ id: newDiscordServerId }).catch((e) => {
-			console.log(e);
-			throw new ApiError("Error creating a new Discord server in database");
-		});
-		return newDiscordServer;
+	async createDiscordServer(newDiscordServerId: string): createDiscordServerReturn {
+		try {
+			const newDiscordServer = await DiscordServer.create({ id: newDiscordServerId });
+			return success(newDiscordServer);
+		} catch (error) {
+			return failure(
+				DataBaseError.create(
+					"An error occurred while trying to create a new record in the database",
+					error,
+					"DiscordServerRepository"
+				)
+			);
+		}
 	}
 
-	async findDiscordServers(config: FindAndCountAllConfig) {
-		console.log(config);
-		const discordServers = await DiscordServer.findAndCountAll(config).catch((e) => {
-			console.log(e);
-			throw new ApiError("Error getting all Discord servers from database");
-		});
-		console.log(discordServers);
-		return discordServers.rows;
+	async findDiscordServers(config: FindAndCountAllConfig): findDiscordServersReturn {
+		try {
+			return success((await DiscordServer.findAndCountAll(config)).rows);
+		} catch (error) {
+			return failure(
+				DataBaseError.create(
+					"An error occurred while trying to retrieve Discord servers from the database",
+					error,
+					"DiscordServerRepository"
+				)
+			);
+		}
 	}
 
-	async updateDiscordServer(DiscordServerId: string | number, newDiscordServerValues: IDiscordServer) {
-		const discordServerUpdated = await DiscordServer.update(newDiscordServerValues, {
-			where: { id: DiscordServerId },
-			returning: true,
-		}).catch((e) => {
-			console.log(e);
-			throw new ApiError("Error updating a new Discord server in database");
-		});
-
-		if (!discordServerUpdated) throw new ApiError("Could not update Discord server");
-		return discordServerUpdated[1];
+	async updateDiscordServer(DiscordServerId: string, newValues: IDiscordServer): updateDiscordServerReturn {
+		try {
+			return success((await DiscordServer.update(newValues, { where: { id: DiscordServerId } }))[1]);
+		} catch (error) {
+			return failure(
+				DataBaseError.create(
+					"An error occurred when trying to update data from a Discord server",
+					error,
+					"DiscordServerRepository"
+				)
+			);
+		}
 	}
 
-	async checkIfDiscordServerAlreadyExists(discordServerId: string | number) {
-		const discordServerFromDb = await DiscordServer.findAll({ where: { id: discordServerId } });
-		return discordServerFromDb.some((discordServer) => {
-			return discordServer.id === discordServerId;
-		});
+	async checkIfDiscordServerAlreadyExists(discordServerId: string): checkIfAlreadyExistsReturn {
+		try {
+			const discordServerFromDb = await DiscordServer.findAll({ where: { id: discordServerId } });
+			return success(
+				discordServerFromDb.some((discordServer) => {
+					return discordServer.id === discordServerId;
+				})
+			);
+		} catch (error) {
+			return failure(
+				DataBaseError.create(
+					"An error occurred when trying to check the existence of a certain value in the database",
+					error,
+					"DiscordServerRepository"
+				)
+			);
+		}
 	}
 }
 

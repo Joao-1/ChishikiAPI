@@ -1,18 +1,33 @@
 /* eslint-disable prettier/prettier */
-import { AllowNull, BelongsToMany, Column, DataType, Default, Model, PrimaryKey, Table } from "sequelize-typescript";
+import {
+	AllowNull,
+	AutoIncrement,
+	BelongsToMany,
+	Column,
+	DataType,
+	Default,
+	Model,
+	PrimaryKey,
+	Table,
+} from "sequelize-typescript";
 import DiscordServerCommands from "./DiscordServerCommands";
 import DiscordServers from "./DiscordServers";
 
-@Table
+@Table({ timestamps: false })
 class DiscordCommands extends Model {
 	@AllowNull(false)
+	@AutoIncrement
 	@PrimaryKey
-	@Column(DataType.STRING)
-	id!: string;
+	@Column(DataType.INTEGER)
+	id!: number;
 
 	@AllowNull(false)
 	@Column(DataType.STRING)
 	name!: string;
+
+	@AllowNull(false)
+	@Column(DataType.STRING)
+	description!: string;
 
 	@AllowNull(false)
 	@Column(DataType.STRING)

@@ -3,15 +3,15 @@ import { Column, DataType, Default, ForeignKey, Model, Table } from "sequelize-t
 import DiscordCommands from "./DiscordCommands";
 import DiscordServers from "./DiscordServers";
 
-@Table
+@Table({ timestamps: false })
 class DiscordServerCommands extends Model {
 	@ForeignKey(() => DiscordServers)
 	@Column(DataType.STRING)
 	DiscordServerId!: string;
 
 	@ForeignKey(() => DiscordCommands)
-	@Column(DataType.STRING)
-	DiscordCommandId!: string;
+	@Column(DataType.INTEGER)
+	DiscordCommandId!: number;
 
 	@Default("disabled")
 	@Column(DataType.STRING)

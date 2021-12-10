@@ -2,9 +2,10 @@ module.exports = {
 	up: async (queryInterface, Sequelize) => {
 		queryInterface.createTable("DiscordCommands", {
 			id: {
-				allowNull: false,
 				primaryKey: true,
-				type: Sequelize.STRING,
+				allowNull: false,
+				autoIncrement: true,
+				type: Sequelize.INTEGER,
 			},
 			name: {
 				type: Sequelize.STRING,
@@ -17,14 +18,6 @@ module.exports = {
 			globalStatus: {
 				type: Sequelize.STRING,
 				default: "disabled",
-			},
-			createdAt: {
-				allowNull: false,
-				type: Sequelize.DATE,
-			},
-			updatedAt: {
-				allowNull: false,
-				type: Sequelize.DATE,
 			},
 		});
 	},

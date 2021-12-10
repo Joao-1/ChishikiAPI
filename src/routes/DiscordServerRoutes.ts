@@ -20,19 +20,21 @@ discordServerRoutes.get("/ping", (req, res) => {
 	res.status(200).json("pong!");
 });
 
-discordServerRoutes.post("/discordserver", validation("body", discordServerBodyToCreateSchema), (req, res) =>
-	discordServerController.create(req, res)
+discordServerRoutes.post("/discord/server", validation("body", discordServerBodyToCreateSchema), (req, res, next) =>
+	discordServerController.create(req, res, next)
 );
 
-discordServerRoutes.get("/discordserver", validation("query", discordServerQueryParamsToReadSchema), (req, res) =>
-	discordServerController.read(req, res)
+discordServerRoutes.get(
+	"/discord/server",
+	validation("query", discordServerQueryParamsToReadSchema),
+	(req, res, next) => discordServerController.read(req, res, next)
 );
 
 discordServerRoutes.put(
-	"/discordserver/:id",
+	"/discord/server/:id",
 	validation("params", Joi.object({ id: Joi.string().required() })),
 	validation("body", discordServerBodyToUpdateSchema),
-	(req, res) => discordServerController.put(req, res)
+	(req, res, next) => discordServerController.put(req, res, next)
 );
 
 export default discordServerRoutes;

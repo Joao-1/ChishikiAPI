@@ -18,7 +18,7 @@ module.exports = {
 				onDelete: "CASCADE",
 			},
 			DiscordCommandId: {
-				type: Sequelize.STRING,
+				type: Sequelize.INTEGER,
 				allowNull: false,
 				references: {
 					model: "DiscordCommands",
@@ -30,14 +30,6 @@ module.exports = {
 			localStatus: {
 				type: Sequelize.STRING,
 				default: "disabled",
-			},
-			createdAt: {
-				allowNull: false,
-				type: Sequelize.DATE,
-			},
-			updatedAt: {
-				allowNull: false,
-				type: Sequelize.DATE,
 			},
 		});
 	},

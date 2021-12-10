@@ -2,6 +2,10 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
+import DiscordCommands from "../database/models/DiscordCommands";
+import DiscordServers from "../database/models/DiscordServers";
+import { DataBaseError, RegisterDiscordServerError, UpdateDiscordServer } from "../helpers/errors/errorsTypes";
+import { Response } from "../helpers/errors/responseError";
 
 export interface IDiscordServer {
 	id: string;
@@ -27,9 +31,15 @@ export interface IQueryParamsRead extends IWhereClause {
 	include: string[];
 }
 
-export interface IBodyPut {
+export interface IDiscordServerBodyPut {
 	prefix?: string;
 	language?: string;
+}
+
+export interface IDiscordCommandBodyPut {
+	name: string;
+	description: string;
+	type: string;
 }
 
 export interface FindAndCountAllConfig {
@@ -40,14 +50,50 @@ export interface FindAndCountAllConfig {
 }
 
 export interface IDiscordServerService {
-	createDiscordServer(discordServerId: string | number): Promise<any>;
-	readDiscordServers(querys: IQueryParamsRead): Promise<IDiscordServer[]>;
-	updateDiscordServer(discordServerId: string | number, newDiscordServerValues: IBodyPut): Promise<DiscordServer[]>;
+	registerDiscordServer(
+		discordServerId: string
+	): Promise<Response<RegisterDiscordServerError.DiscordServerAlreadyExistsError | DataBaseError, DiscordServers>>;
+	readDiscordServers(querys: IQueryParamsRead): Promise<Response<DataBaseError, DiscordServers[]>>;
+	updateDiscordServer(
+		discordServerId: string,
+		newDiscordServerValues: IDiscordServerBodyPut
+	): Promise<Response<UpdateDiscordServer.DiscordServerDoesNotExist | DataBaseError, DiscordServer[]>>;
 }
 
+export type registerDiscordServerReturn = Promise<
+	Response<RegisterDiscordServerError.DiscordServerAlreadyExistsError | DataBaseError, DiscordServers>
+>;
+export type updateDiscordServerServiceReturn = Promise<
+	Response<UpdateDiscordServer.DiscordServerDoesNotExist | DataBaseError, DiscordServer[]>
+>;
+
 export interface IDiscordServerRepository {
-	createDiscordServer(discordServerId: string | number): Promise<DiscordServer>;
-	findDiscordServers(config: FindAndCountAllConfig): Promise<IDiscordServer[]>;
-	checkIfDiscordServerAlreadyExists(discordServerId: string | number): Promise<boolean>;
-	updateDiscordServer(discordServerId: string | number, newDiscordServerValues: IBodyPut): Promise<DiscordServer[]>;
+	createDiscordServer(discordServerId: string): Promise<Response<DataBaseError, DiscordServers>>;
+
+	findDiscordServers(config: FindAndCountAllConfig): Promise<Response<DataBaseError, DiscordServers[]>>;
+
+	updateDiscordServer(
+		discordServerId: string,
+		newDiscordServerValues: IDiscordServerBodyPut
+	): Promise<Response<DataBaseError, DiscordServers[]>>;
+
+	checkIfDiscordServerAlreadyExists(discordServerId: string): Promise<Response<DataBaseError, Boolean>>;
+}
+
+export type createDiscordServerReturn = Promise<Response<DataBaseError, DiscordServers>>;
+export type findDiscordServersReturn = Promise<Response<DataBaseError, DiscordServers[]>>;
+export type updateDiscordServerReturn = Promise<Response<DataBaseError, DiscordServer[]>>;
+export type checkIfAlreadyExistsReturn = Promise<Response<DataBaseError, Boolean>>;
+
+export interface IDiscordCommandsService {
+	createDiscordCommand(name: string, description: string, type: string): Promise<DiscordCommands>;
+	readDiscordCommands(querys: IQueryParamsRead): Promise<DiscordCommands[] | null>;
+	// updateDiscordCommand(name: string, type: string, newDiscordCommandsValues: IDiscordCommandBodyPut);
+}
+
+export interface IDiscordCommandsRepository {
+	createDiscordCommand(name: string, description: string, type: string): Promise<DiscordCommands>;
+	findDiscordCommands(config: FindAndCountAllConfig): Promise<DiscordCommands[]>;
+	// updateDiscordCommand(name: string, type: string, newDiscordCommandsValues: IDiscordCommandBodyPut);
+	checkIfDiscordCommandsAlreadyExists(name: string, type: string): Promise<Boolean>;
 }

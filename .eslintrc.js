@@ -11,7 +11,7 @@ module.exports = {
 	},
 	plugins: ["@typescript-eslint", "prettier"],
 	rules: {
-		"prettier/prettier": [2, { singleQuote: false, parser: "flow", endOfLine: "auto", useTabs: true }],
+		"prettier/prettier": [2, { singleQuote: false, parser: "typescript", endOfLine: "auto", useTabs: true }],
 		"node/no-missing-import": "off",
 		"global-require": "off",
 		"import/no-dynamic-require": "off",
@@ -22,5 +22,6 @@ module.exports = {
 		"import/no-unresolved": "off",
 		"import/extensions": "off",
 		"no-restricted-syntax": "off",
+		"no-underscore-dangle": "off",
 	},
 };

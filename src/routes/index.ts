@@ -1,3 +1,4 @@
-import DiscordServerRoutes from "./DiscordServerRoutes";
+import DiscordCommandsRoutes from "./discordCommandsRoutes";
+import DiscordServerRoutes from "./discordServerRoutes";
 
-export default [DiscordServerRoutes];
+export default [DiscordServerRoutes, DiscordCommandsRoutes];

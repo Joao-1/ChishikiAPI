@@ -10,7 +10,6 @@ import errorMiddleware from "./middlewares/ApiErrorHandler";
 import Routes from "./routes";
 
 class App {
-	// eslint-disable-next-line prettier/prettier
 	private express: express.Application;
 
 	constructor() {
@@ -23,6 +22,7 @@ class App {
 		// this.authenticate();
 		this.routes();
 		this.errors();
+		require("./database/test");
 	}
 
 	public start(port: number) {
