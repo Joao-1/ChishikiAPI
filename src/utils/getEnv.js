@@ -1,6 +1,5 @@
 module.exports = () => {
 	let env;
-	console.log(process.env.NODE_ENV);
 	switch (process.env.NODE_ENV.trim()) {
 		case "dev":
 			env = ".env.dev";

@@ -1,24 +1,31 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { IDiscordCommandsService, IQueryParamsRead } from "../../types/types";
+import returnErrorToClient from "../../utils/returnErrorToClient";
 
-class DiscordCommandsController {
+export default class DiscordCommandsController {
 	discordCommandsService: IDiscordCommandsService;
 
 	constructor(discordCommandsService: IDiscordCommandsService) {
 		this.discordCommandsService = discordCommandsService;
 	}
 
-	async create(req: Request, res: Response) {
+	async create(req: Request, res: Response, next: NextFunction) {
 		const { name, description, type } = req.body;
-		const newCommand = await this.discordCommandsService.createDiscordCommand(name, description, type);
-		res.status(201).json({ status: "sucess", newCommand });
+		const newCommand = await this.discordCommandsService.registerDiscordCommand(name, description, type);
+		if (newCommand.isFailure()) {
+			returnErrorToClient(newCommand.error, res, next);
+			return;
+		}
+		res.status(201).json({ status: "success", newCommand: newCommand.value });
 	}
 
-	async read(req: Request, res: Response) {
+	async read(req: Request, res: Response, next: NextFunction) {
 		const querysInRead = req.query as unknown as IQueryParamsRead;
 		const discordServerSearched = await this.discordCommandsService.readDiscordCommands(querysInRead);
-		res.status(200).json({ status: "sucess", commands: discordServerSearched });
+		if (discordServerSearched.isFailure()) {
+			returnErrorToClient(discordServerSearched.error, res, next);
+			return;
+		}
+		res.status(200).json({ status: "success", commands: discordServerSearched.value });
 	}
 }
-
-export default DiscordCommandsController;

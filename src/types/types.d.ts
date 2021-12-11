@@ -4,7 +4,12 @@
 /* eslint-disable no-unused-vars */
 import DiscordCommands from "../database/models/DiscordCommands";
 import DiscordServers from "../database/models/DiscordServers";
-import { DataBaseError, RegisterDiscordServerError, UpdateDiscordServer } from "../helpers/errors/errorsTypes";
+import {
+	DataBaseError,
+	RegisterDiscordCommand,
+	RegisterDiscordServerError,
+	UpdateDiscordServer,
+} from "../helpers/errors/errorsTypes";
 import { Response } from "../helpers/errors/responseError";
 
 export interface IDiscordServer {
@@ -86,14 +91,31 @@ export type updateDiscordServerReturn = Promise<Response<DataBaseError, DiscordS
 export type checkIfAlreadyExistsReturn = Promise<Response<DataBaseError, Boolean>>;
 
 export interface IDiscordCommandsService {
-	createDiscordCommand(name: string, description: string, type: string): Promise<DiscordCommands>;
-	readDiscordCommands(querys: IQueryParamsRead): Promise<DiscordCommands[] | null>;
+	registerDiscordCommand(
+		name: string,
+		description: string,
+		type: string
+	): Promise<Response<RegisterDiscordCommand.DiscordCommandAlreadyExistsError | DataBaseError, DiscordCommands>>;
+	readDiscordCommands(querys: IQueryParamsRead): Promise<Response<DataBaseError, DiscordCommands[]>>;
 	// updateDiscordCommand(name: string, type: string, newDiscordCommandsValues: IDiscordCommandBodyPut);
 }
 
+export type registerDiscordCommandReturn = Promise<
+	Response<RegisterDiscordCommand.DiscordCommandAlreadyExistsError | DataBaseError, DiscordCommands>
+>;
+export type readDiscordCommandsReturn = Promise<Response<DataBaseError, DiscordCommands[]>>;
+
 export interface IDiscordCommandsRepository {
-	createDiscordCommand(name: string, description: string, type: string): Promise<DiscordCommands>;
-	findDiscordCommands(config: FindAndCountAllConfig): Promise<DiscordCommands[]>;
+	createDiscordCommand(
+		name: string,
+		description: string,
+		type: string
+	): Promise<Response<DataBaseError, DiscordCommands>>;
+	findDiscordCommands(config: FindAndCountAllConfig): Promise<Response<DataBaseError, DiscordCommands[]>>;
 	// updateDiscordCommand(name: string, type: string, newDiscordCommandsValues: IDiscordCommandBodyPut);
-	checkIfDiscordCommandsAlreadyExists(name: string, type: string): Promise<Boolean>;
+	checkIfDiscordCommandsAlreadyExists(name: string, type: string): Promise<Response<DataBaseError, Boolean>>;
 }
+
+export type createDiscordCommandReturn = Promise<Response<DataBaseError, DiscordCommands>>;
+export type findDiscordCommandsReturn = Promise<Response<DataBaseError, DiscordCommands[]>>;
+export type checkIfDiscordCommandsAlreadyExists = Promise<Response<DataBaseError, Boolean>>;

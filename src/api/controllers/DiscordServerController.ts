@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { IDiscordServerBodyPut, IDiscordServerService, IQueryParamsRead } from "../../types/types";
+import returnErrorToClient from "../../utils/returnErrorToClient";
 
-class DiscordServerController {
+export default class DiscordServerController {
 	discordServerService: IDiscordServerService;
 
 	constructor(discordServerService: IDiscordServerService) {
@@ -13,17 +14,10 @@ class DiscordServerController {
 		const newDiscordServer = await this.discordServerService.registerDiscordServer(discordServerId);
 
 		if (newDiscordServer.isFailure()) {
-			const { error } = newDiscordServer;
-
-			if (error.statusCode === 500) {
-				next(error);
-				return;
-			}
-
-			res.status(error.statusCode).json({ status: "error", error });
-		} else {
-			res.status(201).json({ status: "sucess", server: newDiscordServer.value });
+			returnErrorToClient(newDiscordServer.error, res, next);
+			return;
 		}
+		res.status(201).json({ status: "success", server: newDiscordServer.value });
 	}
 
 	async read(req: Request, res: Response, next: NextFunction) {
@@ -32,17 +26,10 @@ class DiscordServerController {
 		const discordServerSearched = await this.discordServerService.readDiscordServers(querysInRead);
 
 		if (discordServerSearched.isFailure()) {
-			const { error } = discordServerSearched;
-
-			if (error.statusCode === 500) {
-				next(error);
-				return;
-			}
-
-			res.status(error.statusCode).json({ status: "error", error });
-		} else {
-			res.status(200).json({ status: "sucess", servers: discordServerSearched.value });
+			returnErrorToClient(discordServerSearched.error, res, next);
+			return;
 		}
+		res.status(200).json({ status: "success", servers: discordServerSearched.value });
 	}
 
 	async put(req: Request, res: Response, next: NextFunction) {
@@ -50,22 +37,12 @@ class DiscordServerController {
 		const bodyPut = req.body as unknown as IDiscordServerBodyPut;
 
 		const serverUpdated = await this.discordServerService.updateDiscordServer(discordServerId, bodyPut);
-
 		if (serverUpdated.isFailure()) {
-			const { error } = serverUpdated;
-
-			if (error.statusCode === 500) {
-				next(error);
-				return;
-			}
-
-			res.status(error.statusCode).json({ status: "error", error });
-		} else {
-			res.status(204).send();
+			returnErrorToClient(serverUpdated.error, res, next);
+			return;
 		}
+		res.status(204).send();
 	}
 
 	// async delete() {}
 }
-
-export default DiscordServerController;

@@ -1,7 +1,13 @@
-import DiscordCommands from "../../database/models/DiscordCommands";
-import ApiError from "../../helpers/apiError";
+import { RegisterDiscordCommand } from "../../helpers/errors/errorsTypes";
+import { failure, success } from "../../helpers/errors/responseError";
 import generateReadMethodOptions from "../../helpers/generateReadMethodOptions";
-import { IDiscordCommandsRepository, IDiscordCommandsService, IQueryParamsRead } from "../../types/types";
+import {
+	IDiscordCommandsRepository,
+	IDiscordCommandsService,
+	IQueryParamsRead,
+	readDiscordCommandsReturn,
+	registerDiscordCommandReturn,
+} from "../../types/types";
 
 class DiscordCommandsService implements IDiscordCommandsService {
 	discordCommandsRepository: IDiscordCommandsRepository;
@@ -10,17 +16,21 @@ class DiscordCommandsService implements IDiscordCommandsService {
 		this.discordCommandsRepository = discordCommandsRepository;
 	}
 
-	async createDiscordCommand(name: string, description: string, type: string): Promise<DiscordCommands> {
-		if (await this.discordCommandsRepository.checkIfDiscordCommandsAlreadyExists(name, type)) {
-			throw new ApiError("There is already a Discord Command with this name and type", 409);
-		}
-
+	async registerDiscordCommand(name: string, description: string, type: string): registerDiscordCommandReturn {
+		const checkResult = await this.discordCommandsRepository.checkIfDiscordCommandsAlreadyExists(name, type);
+		if (checkResult.isFailure()) return failure(checkResult.error);
+		if (checkResult.value) return failure(RegisterDiscordCommand.DiscordCommandAlreadyExistsError.create(name));
 		const newCommand = await this.discordCommandsRepository.createDiscordCommand(name, description, type);
-		return newCommand;
+		if (newCommand.isFailure()) return failure(newCommand.error);
+		return success(newCommand.value);
 	}
 
-	readDiscordCommands(querys: IQueryParamsRead): Promise<DiscordCommands[]> {
-		return this.discordCommandsRepository.findDiscordCommands(generateReadMethodOptions(querys));
+	async readDiscordCommands(querys: IQueryParamsRead): readDiscordCommandsReturn {
+		const searchResult = await this.discordCommandsRepository.findDiscordCommands(
+			generateReadMethodOptions(querys)
+		);
+		if (searchResult.isFailure()) return failure(searchResult.error);
+		return success(searchResult.value);
 	}
 
 	// updateDiscordCommand(name: string, type: string, newDiscordCommandsValues: IDiscordCommandBodyPut) {

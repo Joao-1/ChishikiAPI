@@ -34,7 +34,7 @@ export namespace RegisterDiscordServerError {
 	export class DiscordServerAlreadyExistsError extends ClientError {
 		constructor(discordServerId: string) {
 			super(
-				"An error occurred when trying to register a new server.",
+				"An error occurred when trying to register a new Discord server.",
 				`The Discord server with "${discordServerId}" id has already been taken.`,
 				422
 			);
@@ -58,6 +58,22 @@ export namespace UpdateDiscordServer {
 
 		static create(discordServerId: string): DiscordServerDoesNotExist {
 			return new DiscordServerDoesNotExist(discordServerId);
+		}
+	}
+}
+
+export namespace RegisterDiscordCommand {
+	export class DiscordCommandAlreadyExistsError extends ClientError {
+		constructor(commandName: string) {
+			super(
+				"An error occurred when trying to register a new Discord command.",
+				`The Discord server with "${commandName}" name has already been taken.`,
+				422
+			);
+		}
+
+		static create(commandName: string): DiscordCommandAlreadyExistsError {
+			return new DiscordCommandAlreadyExistsError(commandName);
 		}
 	}
 }

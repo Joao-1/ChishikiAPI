@@ -14,14 +14,16 @@ const discordCommandsController = new DiscordCommandsController(discordCommandsS
 
 const discordcommandsRoutes = Router();
 
-discordcommandsRoutes.post("/discord/commands", validation("body", discordCommandsBodyToCreateSchema), (req, res) =>
-	discordCommandsController.create(req, res)
+discordcommandsRoutes.post(
+	"/discord/commands",
+	validation("body", discordCommandsBodyToCreateSchema),
+	(req, res, next) => discordCommandsController.create(req, res, next)
 );
 
 discordcommandsRoutes.get(
 	"/discord/commands",
 	validation("params", discordCommandsQueryParamsToReadSchema),
-	(req, res) => discordCommandsController.read(req, res)
+	(req, res, next) => discordCommandsController.read(req, res, next)
 );
 
 export default discordcommandsRoutes;

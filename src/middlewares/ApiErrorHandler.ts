@@ -1,17 +1,17 @@
 import { NextFunction, Request, Response } from "express";
-import ApiError from "../helpers/apiError";
+import { ServerError } from "../helpers/errors/domainError";
 
-const errorMiddleware = (error: ApiError, request: Request, response: Response, next: NextFunction) => {
-	const { status } = error;
+const errorMiddleware = (error: ServerError, request: Request, response: Response, next: NextFunction) => {
+	const { statusCode } = error;
 	let { message } = error;
 
 	console.log(message);
-	if (status === 500 || status === undefined) {
+	if (statusCode === 500 || statusCode === undefined) {
 		message = "Internal Server Error";
 	}
 
-	response.status(status || 500).json({
-		status,
+	response.status(statusCode || 500).json({
+		statusCode,
 		message,
 	});
 };
