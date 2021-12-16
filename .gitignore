@@ -5,3 +5,7 @@ node_modules
 coverage
 dist
 src/database/datadev
+logs/debug.log
+logs/error.log
+logs/info.log
+logs/warn.log

@@ -3,10 +3,9 @@ import helmet from "helmet";
 import morgan from "morgan";
 import { Sequelize } from "sequelize-typescript";
 import { Dialect } from "sequelize/types";
+import logger from "../logs/logger";
 import config from "./config/config";
-import errorMiddleware from "./middlewares/ApiErrorHandler";
-// import passport from 'passport';
-// import auth from './API/auth/passportStrategy';
+import errorHandler from "./middlewares/errorHandlerMiddleware";
 import Routes from "./routes";
 
 class App {
@@ -19,14 +18,12 @@ class App {
 	public async load() {
 		await this.database();
 		this.middleware();
-		// this.authenticate();
 		this.routes();
-		this.errors();
-		require("./database/test");
+		this.errorHandler();
 	}
 
 	public start(port: number) {
-		console.log(`App starting at http://localhost:${port}`);
+		logger.info(`App starting at http://localhost:${port}`);
 		return this.express.listen(port);
 	}
 
@@ -42,9 +39,10 @@ class App {
 				models: [`${__dirname}/database/models`],
 			});
 			connection.authenticate();
-			console.log("Banco de dados conectado com sucesso");
+			logger.info("Database connected successfully");
 		} catch (error) {
-			console.log(error);
+			logger.error("Error connecting to database", error as string, "app");
+			process.exit();
 		}
 	}
 
@@ -53,19 +51,14 @@ class App {
 		this.express.use(helmet());
 		this.express.use(express.urlencoded({ extended: false }));
 		this.express.use(express.json());
-		// this.express.use(passport.initialize());
 	}
-
-	// private authenticate() {
-	//     passport.use(auth.jwtStrategy);
-	// }
 
 	private routes() {
 		this.express.use(Routes);
 	}
 
-	private errors() {
-		this.express.use(errorMiddleware);
+	private errorHandler() {
+		this.express.use(errorHandler);
 	}
 }
 

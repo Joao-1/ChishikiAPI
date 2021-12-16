@@ -25,7 +25,8 @@ discordServerRoutes.post("/discord/server", validation("body", discordServerBody
 );
 
 discordServerRoutes.get(
-	"/discord/server",
+	"/discord/server/:id",
+	validation("params", Joi.object({ id: Joi.string() })),
 	validation("query", discordServerQueryParamsToReadSchema),
 	(req, res, next) => discordServerController.read(req, res, next)
 );
