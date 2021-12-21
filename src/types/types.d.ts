@@ -19,6 +19,7 @@ export interface IDiscordServer {
 }
 
 export interface IWhereClause {
+	id?: string[];
 	status?: "active" | "inactive";
 }
 
@@ -31,6 +32,7 @@ export interface IQueryParamsRead extends IWhereClause {
 			yield [i, this[i]];
 		}
 	};
+	servers?: string[];
 	offset?: number;
 	limit?: number;
 	include: string[];
@@ -58,7 +60,10 @@ export interface IDiscordServerService {
 	registerDiscordServer(
 		discordServerId: string
 	): Promise<Response<RegisterDiscordServerError.DiscordServerAlreadyExistsError | DataBaseError, DiscordServers>>;
-	readDiscordServers(querys: IQueryParamsRead): Promise<Response<DataBaseError, DiscordServers[]>>;
+	readDiscordServers(
+		querys: IQueryParamsRead,
+		specificServerId?: string
+	): Promise<Response<DataBaseError, DiscordServers[]>>;
 	updateDiscordServer(
 		discordServerId: string,
 		newDiscordServerValues: IDiscordServerBodyPut
@@ -83,6 +88,7 @@ export interface IDiscordServerRepository {
 	): Promise<Response<DataBaseError, DiscordServers[]>>;
 
 	checkIfDiscordServerAlreadyExists(discordServerId: string): Promise<Response<DataBaseError, Boolean>>;
+	getAssociations(): string[];
 }
 
 export type createDiscordServerReturn = Promise<Response<DataBaseError, DiscordServers>>;
@@ -114,6 +120,7 @@ export interface IDiscordCommandsRepository {
 	findDiscordCommands(config: FindAndCountAllConfig): Promise<Response<DataBaseError, DiscordCommands[]>>;
 	// updateDiscordCommand(name: string, type: string, newDiscordCommandsValues: IDiscordCommandBodyPut);
 	checkIfDiscordCommandsAlreadyExists(name: string, type: string): Promise<Response<DataBaseError, Boolean>>;
+	getAssociations(): string[];
 }
 
 export type createDiscordCommandReturn = Promise<Response<DataBaseError, DiscordCommands>>;

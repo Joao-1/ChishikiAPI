@@ -21,9 +21,13 @@ export default class DiscordServerController {
 	}
 
 	async read(req: Request, res: Response, next: NextFunction) {
+		const specificServerId = req.params.id as string;
 		const querysInRead = req.query as unknown as IQueryParamsRead;
 
-		const discordServerSearched = await this.discordServerService.readDiscordServers(querysInRead);
+		const discordServerSearched = await this.discordServerService.readDiscordServers(
+			querysInRead,
+			specificServerId
+		);
 
 		if (discordServerSearched.isFailure()) {
 			returnErrorToClient(discordServerSearched.error, res, next);

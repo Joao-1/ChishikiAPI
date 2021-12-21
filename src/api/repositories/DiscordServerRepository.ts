@@ -1,4 +1,4 @@
-import DiscordServer from "../../database/models/DiscordServers";
+import DiscordServers from "../../database/models/DiscordServers";
 import { DataBaseError } from "../../helpers/errors/errorsTypes";
 import { failure, success } from "../../helpers/errors/responseError";
 import {
@@ -14,7 +14,7 @@ import { updateDiscordServerReturn } from "../../types/types.d";
 class DiscordServerRepository implements IDiscordServerRepository {
 	async createDiscordServer(newDiscordServerId: string): createDiscordServerReturn {
 		try {
-			const newDiscordServer = await DiscordServer.create({ id: newDiscordServerId });
+			const newDiscordServer = await DiscordServers.create({ id: newDiscordServerId });
 			return success(newDiscordServer);
 		} catch (error) {
 			return failure(
@@ -29,7 +29,7 @@ class DiscordServerRepository implements IDiscordServerRepository {
 
 	async findDiscordServers(config: FindAndCountAllConfig): findDiscordServersReturn {
 		try {
-			return success((await DiscordServer.findAndCountAll(config)).rows);
+			return success((await DiscordServers.findAndCountAll(config)).rows);
 		} catch (error) {
 			return failure(
 				DataBaseError.create(
@@ -43,7 +43,7 @@ class DiscordServerRepository implements IDiscordServerRepository {
 
 	async updateDiscordServer(DiscordServerId: string, newValues: IDiscordServer): updateDiscordServerReturn {
 		try {
-			return success((await DiscordServer.update(newValues, { where: { id: DiscordServerId } }))[1]);
+			return success((await DiscordServers.update(newValues, { where: { id: DiscordServerId } }))[1]);
 		} catch (error) {
 			return failure(
 				DataBaseError.create(
@@ -57,7 +57,7 @@ class DiscordServerRepository implements IDiscordServerRepository {
 
 	async checkIfDiscordServerAlreadyExists(discordServerId: string): checkIfAlreadyExistsReturn {
 		try {
-			const discordServerFromDb = await DiscordServer.findAll({ where: { id: discordServerId } });
+			const discordServerFromDb = await DiscordServers.findAll({ where: { id: discordServerId } });
 			return success(
 				discordServerFromDb.some((discordServer) => {
 					return discordServer.id === discordServerId;
@@ -72,6 +72,10 @@ class DiscordServerRepository implements IDiscordServerRepository {
 				)
 			);
 		}
+	}
+
+	getAssociations() {
+		return Object.keys(DiscordServers.associations);
 	}
 }
 

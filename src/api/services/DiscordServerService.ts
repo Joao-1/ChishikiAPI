@@ -34,8 +34,13 @@ class DiscordServerService implements IDiscordServerService {
 		return success(discordServerCreated.value);
 	}
 
-	async readDiscordServers(querys: IQueryParamsRead): findDiscordServersReturn {
-		const servers = await this.discordServerRepository.findDiscordServers(generateReadMethodOptions(querys));
+	async readDiscordServers(querys: IQueryParamsRead, specificServerId?: string): findDiscordServersReturn {
+		if (specificServerId) querys.servers = [specificServerId];
+
+		const servers = await this.discordServerRepository.findDiscordServers(
+			generateReadMethodOptions(querys, this.discordServerRepository.getAssociations())
+		);
+
 		if (servers.isFailure()) return failure(servers.error);
 		return success(servers.value);
 	}

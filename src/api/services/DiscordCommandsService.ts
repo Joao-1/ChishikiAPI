@@ -27,7 +27,7 @@ class DiscordCommandsService implements IDiscordCommandsService {
 
 	async readDiscordCommands(querys: IQueryParamsRead): readDiscordCommandsReturn {
 		const searchResult = await this.discordCommandsRepository.findDiscordCommands(
-			generateReadMethodOptions(querys)
+			generateReadMethodOptions(querys, this.discordCommandsRepository.getAssociations())
 		);
 		if (searchResult.isFailure()) return failure(searchResult.error);
 		return success(searchResult.value);

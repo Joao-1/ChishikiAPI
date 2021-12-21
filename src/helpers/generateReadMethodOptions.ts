@@ -1,16 +1,29 @@
 import { Includeable } from "sequelize/types";
 import { FindAndCountAllConfig, IQueryParamsRead, IWhereClause } from "../types/types";
 
-export default (querys: IQueryParamsRead) => {
+export default (querys: IQueryParamsRead, associations: string[]) => {
 	const whereClause: IWhereClause = {};
-	const includeModels: Includeable[] = [];
+	let includeModels: Includeable[] = [];
+	let offset = 0;
+	let limit = 99;
 
 	const filtersConfig: { [key: string]: any } = {
+		offset: () => {
+			offset = (querys.offset as number) - 1;
+		},
+		limit: () => {
+			limit = (querys.limit as number) - 1;
+		},
+		servers: () => {
+			whereClause.id = querys.servers;
+		},
 		status: () => {
 			whereClause.status = querys.status;
 		},
 		include: () => {
-			includeModels.push(querys.include.toString());
+			includeModels = querys.include.filter((value) => {
+				return associations.includes(value);
+			});
 		},
 	};
 
@@ -21,11 +34,11 @@ export default (querys: IQueryParamsRead) => {
 	}
 
 	const options: FindAndCountAllConfig = {
-		offset: querys.offset || 1,
-		limit: querys.limit || 100,
 		where: whereClause,
+		offset,
+		limit,
 		include: includeModels,
 	};
-
+	console.log(options);
 	return options;
 };

@@ -60,6 +60,10 @@ class DiscordCommandsRepository implements IDiscordCommandsRepository {
 			);
 		}
 	}
+
+	getAssociations() {
+		return Object.keys(DiscordCommands.associations);
+	}
 }
 
 export default DiscordCommandsRepository;
