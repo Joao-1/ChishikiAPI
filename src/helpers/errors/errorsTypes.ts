@@ -30,6 +30,18 @@ export class DataBaseError extends ServerError {
 	}
 }
 
+export namespace JoiError {
+	export class ValidationError extends ClientError {
+		constructor(error: { details: {}[] }) {
+			super("An error occurred while trying to validate the request.", error, 422);
+		}
+
+		static create(error: { details: {}[] }): ValidationError {
+			return new ValidationError(error);
+		}
+	}
+}
+
 export namespace RegisterDiscordServerError {
 	export class DiscordServerAlreadyExistsError extends ClientError {
 		constructor(discordServerId: string) {

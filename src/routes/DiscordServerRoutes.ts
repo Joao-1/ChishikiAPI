@@ -26,14 +26,14 @@ discordServerRoutes.post("/discord/server", validation("body", discordServerBody
 
 discordServerRoutes.get(
 	"/discord/server/:id?",
-	validation("params", Joi.object({ id: Joi.string() })),
+	validation("params", Joi.object({ id: Joi.number() })),
 	validation("query", discordServerQueryParamsToReadSchema),
 	(req, res, next) => discordServerController.read(req, res, next)
 );
 
 discordServerRoutes.put(
 	"/discord/server/:id",
-	validation("params", Joi.object({ id: Joi.string().required() })),
+	validation("params", Joi.object({ id: Joi.number().required() })),
 	validation("body", discordServerBodyToUpdateSchema),
 	(req, res, next) => discordServerController.put(req, res, next)
 );

@@ -9,3 +9,4 @@ logs/debug.log
 logs/error.log
 logs/info.log
 logs/warn.log
+__tests__/utils/database/dataDev

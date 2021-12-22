@@ -12,7 +12,7 @@ export default (querys: IQueryParamsRead, associations: string[]) => {
 			offset = (querys.offset as number) - 1;
 		},
 		limit: () => {
-			limit = (querys.limit as number) - 1;
+			limit = querys.limit as number;
 		},
 		servers: () => {
 			whereClause.id = querys.servers;
@@ -39,6 +39,6 @@ export default (querys: IQueryParamsRead, associations: string[]) => {
 		limit,
 		include: includeModels,
 	};
-	console.log(options);
+
 	return options;
 };

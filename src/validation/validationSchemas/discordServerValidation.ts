@@ -10,7 +10,7 @@ export const discordServerBodyToUpdateSchema = Joi.object({
 });
 
 export const discordServerQueryParamsToReadSchema = Joi.object({
-	servers: Joi.array().items(Joi.string()),
+	servers: Joi.array().items(Joi.number()),
 	offset: Joi.number().min(1),
 	limit: Joi.number().min(1),
 	include: Joi.array(),

@@ -41,6 +41,7 @@ export default class DiscordServerController {
 		const bodyPut = req.body as unknown as IDiscordServerBodyPut;
 
 		const serverUpdated = await this.discordServerService.updateDiscordServer(discordServerId, bodyPut);
+
 		if (serverUpdated.isFailure()) {
 			returnErrorToClient(serverUpdated.error, res, next);
 			return;

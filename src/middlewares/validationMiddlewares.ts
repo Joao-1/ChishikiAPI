@@ -1,23 +1,24 @@
 import { NextFunction, Request, Response } from "express";
 import { Schema } from "joi";
+import { JoiError } from "../helpers/errors/errorsTypes";
+import returnErrorToClient from "../utils/returnErrorToClient";
 
 export default (validationType: "body" | "params" | "query", schema: Schema) => {
-	// eslint-disable-next-line consistent-return
 	return (req: Request, res: Response, next: NextFunction) => {
 		const validation = req[validationType];
 
 		const { error } = schema.validate(validation, { abortEarly: false });
 		if (error) {
-			return res.status(422).json({
-				status: "failed",
-				error: {
-					details: error.details.map((el) => {
-						return {
-							message: el.message,
-						};
-					}),
-				},
-			});
+			const errorDetails = {
+				details: error.details.map((el) => {
+					return {
+						message: el.message,
+					};
+				}),
+			};
+
+			returnErrorToClient(JoiError.ValidationError.create(errorDetails), res, next);
+			return;
 		}
 		next();
 	};
