@@ -20,7 +20,8 @@ export interface IDiscordServer {
 
 export interface IWhereClause {
 	id?: string[];
-	status?: "active" | "inactive";
+	status?: "active" | "disabled";
+	type?: "public" | "private" | "custom";
 }
 
 export interface IQueryParamsRead extends IWhereClause {

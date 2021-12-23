@@ -11,4 +11,5 @@ export const discordCommandsQueryParamsToReadSchema = Joi.object({
 	limit: Joi.number().min(1),
 	include: Joi.array(),
 	type: Joi.string().valid("public", "private", "custom"),
+	status: Joi.string().valid("active", "disabled"),
 });

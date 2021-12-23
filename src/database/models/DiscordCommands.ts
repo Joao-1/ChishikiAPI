@@ -35,7 +35,7 @@ class DiscordCommands extends Model {
 
 	@Default("disabled")
 	@Column(DataType.STRING)
-	globalStatus!: string;
+	status!: string;
 
 	@BelongsToMany(() => DiscordServers, () => DiscordServerCommands)
 	servers!: DiscordServers;

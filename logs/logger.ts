@@ -56,7 +56,7 @@ export default {
 	debug(debugValue: unknown) {
 		debug.debug(debugValue);
 	},
-	info(msg: string) {
+	info(msg: unknown) {
 		info.info(msg);
 	},
 	warn(msg: string) {

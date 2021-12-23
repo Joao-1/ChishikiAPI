@@ -15,7 +15,7 @@ module.exports = {
 				type: Sequelize.STRING,
 				allowNull: false,
 			},
-			globalStatus: {
+			status: {
 				type: Sequelize.STRING,
 				default: "disabled",
 			},

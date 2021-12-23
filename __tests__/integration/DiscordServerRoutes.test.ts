@@ -57,12 +57,12 @@ describe("Read Discord Server", () => {
 		expect(readDiscordServerAllResponse.body).toHaveProperty("servers");
 	});
 
-	it("should receive a code 200 when get a Discord Server with params `status=inactive`.", async () => {
-		await DiscordServers.create({ id: 321, status: "inactive" });
-		const readDiscordServerStatusResponse = await httpVerbs.get("/discord/server?status=inactive");
+	it("should receive a code 200 when get a Discord Server with params `status=disabled`.", async () => {
+		await DiscordServers.create({ id: 321, status: "disabled" });
+		const readDiscordServerStatusResponse = await httpVerbs.get("/discord/server?status=disabled");
 
 		expect(readDiscordServerStatusResponse.statusCode).toBe(200);
-		expect(readDiscordServerStatusResponse.body.servers[0].status).toBe("inactive");
+		expect(readDiscordServerStatusResponse.body.servers[0].status).toBe("disabled");
 	});
 
 	it("should receive a code 200 when get a Discord Server with params `include=commands`.", async () => {
@@ -91,46 +91,44 @@ describe("Read Discord Server", () => {
 		expect(readDiscordServerOffsetLimitResponse.statusCode).toBe(200);
 		expect(readDiscordServerOffsetLimitResponse.body.servers.length).toBe(1);
 	});
+});
 
-	describe("Put Discord Server", () => {
-		it("should receive a code 204 when put a Discord Server with a new value", async () => {
-			await DiscordServers.create({ id: 1111, status: "inactive" });
-			const putDiscordServerResponse = await httpVerbs.put("/discord/server/1111");
+describe("Put Discord Server", () => {
+	it("should receive a code 204 when put a Discord Server with a new value", async () => {
+		await DiscordServers.create({ id: 1111 });
+		const putDiscordServerResponse = await httpVerbs.put("/discord/server/1111");
 
-			expect(putDiscordServerResponse.statusCode).toBe(204);
-		});
-
-		it("should receive a code 404 when put a Discord Server that does not exist", async () => {
-			const putDiscordServerResponse = await httpVerbs.put("/discord/server/000");
-
-			expect(putDiscordServerResponse.statusCode).toBe(404);
-		});
+		expect(putDiscordServerResponse.statusCode).toBe(204);
 	});
 
-	describe("Joi Validations tests", () => {
-		it("should receive a code 422 when register a new Discord Server without id.", async () => {
-			const registerDiscordServerResponse = await httpVerbs.post("/discord/server").send({
-				id: "",
-			});
+	it("should receive a code 404 when put a Discord Server that does not exist", async () => {
+		const putDiscordServerResponse = await httpVerbs.put("/discord/server/000");
 
-			expect(registerDiscordServerResponse.statusCode).toBe(422);
-			expect(registerDiscordServerResponse.body.status).toBe("error");
+		expect(putDiscordServerResponse.statusCode).toBe(404);
+	});
+});
+
+describe("Joi Validations tests", () => {
+	it("should receive a code 422 when register a new Discord Server without id.", async () => {
+		const registerDiscordServerResponse = await httpVerbs.post("/discord/server").send({
+			id: "",
 		});
 
-		it("should receive a code 422 when get a Discord Server with params `status` incorrect.", async () => {
-			await DiscordServers.create({ id: 321, status: "inactive" });
-			const readDiscordServerStatusResponse = await httpVerbs.get("/discord/server?status=incorrect");
+		expect(registerDiscordServerResponse.statusCode).toBe(422);
+		expect(registerDiscordServerResponse.body.status).toBe("error");
+	});
 
-			expect(readDiscordServerStatusResponse.statusCode).toBe(422);
-			expect(readDiscordServerStatusResponse.body.status).toBe("error");
-		});
+	it("should receive a code 422 when get a Discord Server with params `status` incorrect.", async () => {
+		const readDiscordServerStatusResponse = await httpVerbs.get("/discord/server?status=incorrect");
 
-		it("should receive a code 422 when trying to update a Discord Server without providing the id", async () => {
-			await DiscordServers.create({ id: 1111, status: "inactive" });
-			const putDiscordServerResponse = await httpVerbs.put("/discord/server/t3st");
+		expect(readDiscordServerStatusResponse.statusCode).toBe(422);
+		expect(readDiscordServerStatusResponse.body.status).toBe("error");
+	});
 
-			expect(putDiscordServerResponse.statusCode).toBe(422);
-			expect(putDiscordServerResponse.body.status).toBe("error");
-		});
+	it("should receive a code 422 when trying to update a Discord Server without providing the id", async () => {
+		const putDiscordServerResponse = await httpVerbs.put("/discord/server/t3st");
+
+		expect(putDiscordServerResponse.statusCode).toBe(422);
+		expect(putDiscordServerResponse.body.status).toBe("error");
 	});
 });

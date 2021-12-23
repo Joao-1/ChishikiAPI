@@ -22,7 +22,7 @@ discordcommandsRoutes.post(
 
 discordcommandsRoutes.get(
 	"/discord/commands",
-	validation("params", discordCommandsQueryParamsToReadSchema),
+	validation("query", discordCommandsQueryParamsToReadSchema),
 	(req, res, next) => discordCommandsController.read(req, res, next)
 );
 

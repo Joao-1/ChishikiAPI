@@ -8,22 +8,32 @@ export default (querys: IQueryParamsRead, associations: string[]) => {
 	let limit = 99;
 
 	const filtersConfig: { [key: string]: any } = {
+		// geral config
 		offset: () => {
 			offset = (querys.offset as number) - 1;
 		},
+
 		limit: () => {
 			limit = querys.limit as number;
 		},
-		servers: () => {
-			whereClause.id = querys.servers;
-		},
-		status: () => {
-			whereClause.status = querys.status;
-		},
+
 		include: () => {
 			includeModels = querys.include.filter((value) => {
 				return associations.includes(value);
 			});
+		},
+
+		servers: () => {
+			whereClause.id = querys.servers;
+		},
+
+		status: () => {
+			whereClause.status = querys.status;
+		},
+
+		// commands config
+		type: () => {
+			whereClause.type = querys.type;
 		},
 	};
 

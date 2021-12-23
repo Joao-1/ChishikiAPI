@@ -14,6 +14,6 @@ export const discordServerQueryParamsToReadSchema = Joi.object({
 	offset: Joi.number().min(1),
 	limit: Joi.number().min(1),
 	include: Joi.array(),
-	status: Joi.string().valid("active", "inactive"),
+	status: Joi.string().valid("active", "disabled"),
 	top: Joi.number(),
 });
