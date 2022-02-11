@@ -23,5 +23,7 @@ module.exports = {
 		"import/extensions": "off",
 		"no-restricted-syntax": "off",
 		"no-underscore-dangle": "off",
+		"no-useless-constructor": "off",
+		"no-empty-function": ["error", { allow: ["constructors"] }],
 	},
 };

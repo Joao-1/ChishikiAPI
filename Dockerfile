@@ -1,10 +1,18 @@
-FROM node
+FROM node:alpine
 
-WORKDIR /usr/chishikiApi
-COPY package*.json ./
+WORKDIR /usr/app
+
+COPY package.json . 
+COPY yarn.lock .
+COPY tsconfig.json .
 RUN yarn
+
 COPY . .
+
 RUN yarn build
+
 EXPOSE 3000
 
-CMD [ "yarn", "start" ]
+RUN apk add --no-cache bash
+
+CMD ["yarn", "start:prod"]
