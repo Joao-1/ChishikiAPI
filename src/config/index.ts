@@ -1,12 +1,11 @@
-import { ConfigModule } from "@nestjs/config";
 import appConfig from "./appConfig";
 import discordConfig from "./discordConfig";
 
-const config = ConfigModule.forRoot({
-	envFilePath: [".env"],
+const config = {
+	envFilePath: [`.env.${process.env.NODE_ENV}`.trim()],
 	load: [appConfig, discordConfig],
 	isGlobal: true,
 	expandVariables: true,
-});
+};
 
 export default config;

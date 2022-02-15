@@ -12,8 +12,8 @@ export class DataBaseError extends ServerErrors {
 
 export namespace ServicesProvidersError {
 	export class DiscordError extends ServerErrors {
-		constructor(error: unknown, place: string) {
-			super("An error occurred while consuming the Discord service.", error, place);
+		constructor(message: string, error: unknown, place: string) {
+			super(message, error, place);
 		}
 	}
 }

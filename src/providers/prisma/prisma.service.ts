@@ -7,11 +7,11 @@ export default class PrismaService extends PrismaClient implements OnModuleInit,
 		super();
 	}
 
-	async onModuleInit() {
-		await this.$connect();
+	onModuleInit() {
+		return this.$connect();
 	}
 
-	async onModuleDestroy() {
-		await this.$disconnect();
+	onModuleDestroy() {
+		return this.$disconnect();
 	}
 }

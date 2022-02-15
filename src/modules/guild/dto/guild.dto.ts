@@ -1,6 +1,6 @@
 import { IsNotEmpty } from "class-validator";
 
-export default class RegisterDiscordServerDTO {
+export default class RegisterGuildDTO {
 	@IsNotEmpty()
 	id: string;
 }

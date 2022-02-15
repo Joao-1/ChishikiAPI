@@ -10,28 +10,34 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model DiscordServer {
+model Guild {
   id       String                   @id
   prefix   String?                  @default("!")
   language String?                  @default("en-US")
   status   String?                  @default("active")
-  commands DiscordServerCommands[]
+  commands GuildCommands[]
+
+  @@map("guilds")
 }
 
-model DiscordCommand {
+model Command {
   id                    Int                     @id @default(autoincrement())
   name                  String
   description           String
   status                String                  @default("disabled")
   type                  String
-  DiscordServerCommands DiscordServerCommands[]
+  DiscordServerCommands GuildCommands[]
+
+  @@map("commands")
 }
 
-model DiscordServerCommands {
-  discordServer    DiscordServer  @relation(fields: [discordServerId], references: [id])
+model GuildCommands {
+  discordServer    Guild  @relation(fields: [discordServerId], references: [id])
   discordServerId  String
-  discordCommand   DiscordCommand @relation(fields: [discordCommandId], references: [id])
+  discordCommand   Command @relation(fields: [discordCommandId], references: [id])
   discordCommandId Int
 
   @@id([discordServerId, discordCommandId])
+  
+  @@map("guildcommands")
 }

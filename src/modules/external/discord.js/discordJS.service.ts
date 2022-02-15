@@ -2,22 +2,30 @@ import { REST } from "@discordjs/rest";
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Routes } from "discord-api-types/v9";
+import { ServicesProvidersError } from "../../../common/exceptions/serverErros";
 
 @Injectable()
 export default class DiscordJsService {
-	private rest = new REST({ version: "9" });
+	rest: REST;
 
 	// eslint-disable-next-line no-unused-vars
-	constructor(private configService: ConfigService) { }
+	constructor(private configService: ConfigService) {
+		this.rest = new REST({ version: "9" }).setToken(configService.get<string>("discord.token"));
+	}
 
 	async verifyIfGuildExists(guildId: string) {
 		try {
-			const possibleGuild = await this.rest
-				.setToken(this.configService.get<string>("discord.token"))
-				.get(Routes.guild(guildId));
+			const possibleGuild = await this.rest.get(Routes.guild(guildId));
 			return !!possibleGuild;
 		} catch (error) {
-			throw new Error("Erro ao tentar saber a existencia de uma guilda no discord");
+			if (error.status === 400 || error.status === 403) {
+				return false;
+			}
+			throw new ServicesProvidersError.DiscordError(
+				"Error when trying to verify the existence of a guild from Discord servers",
+				error,
+				"DiscordJsService"
+			);
 		}
 	}
 }
