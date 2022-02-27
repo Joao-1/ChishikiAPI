@@ -18,15 +18,27 @@ describe("DiscordJsService", () => {
 		await app.init();
 	});
 
-	it("should return an error when trying to verify the existence of a guild from the Discord servers", async () => {
+	it("should return true when trying verify if Guild exists in Discord Servers", async () => {
 		discordJs.rest.get = jest.fn().mockImplementation(() => {
-			throw new Error("ServicesProvidersError.DiscordError error");
+			return { id: "123" };
+		});
+		const verifyResult = await discordJs.verifyIfGuildExists("1234");
+		expect(discordJs.rest.get).toBeCalledTimes(1);
+		expect(discordJs.rest.get).toBeCalledWith("/guilds/1234");
+		expect(verifyResult).toBe(true);
+	});
+
+	it("should return an error when trying to verify the existence of a guild from the Discord servers", async () => {
+		const err = "ServicesProvidersError.DiscordError error";
+		discordJs.rest.get = jest.fn().mockImplementation(() => {
+			throw new Error(err);
 		});
 		try {
-			await discordJs.verifyIfGuildExists("");
+			await discordJs.verifyIfGuildExists("1234");
 		} catch (error) {
 			expect(error.message).toBe("Error when trying to verify the existence of a guild from Discord servers");
-			expect(error.error.message).toBe("ServicesProvidersError.DiscordError error");
+			expect(error.error.message).toBe(err);
+			expect(error.place).toBe("DiscordJsService");
 		}
 	});
 });
