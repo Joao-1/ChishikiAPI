@@ -17,7 +17,6 @@ module.exports = {
 		"import/no-dynamic-require": "off",
 		"class-methods-use-this": "off",
 		"no-param-reassign": "off",
-		"no-unused-vars": ["error", { argsIgnorePattern: "next" }],
 		"node/no-unsupported-features/es-syntax": "off",
 		"import/no-unresolved": "off",
 		"import/extensions": "off",
@@ -25,5 +24,6 @@ module.exports = {
 		"no-underscore-dangle": "off",
 		"no-useless-constructor": "off",
 		"no-empty-function": ["error", { allow: ["constructors"] }],
+		"no-unused-vars": "off",
 	},
 };

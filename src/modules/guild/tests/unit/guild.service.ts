@@ -2,7 +2,7 @@
 import { INestApplication } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
 import AppModule from "../../../../app.module";
-import DiscordJsService from "../../../../modules/external/discord.js/discordJS.service";
+import DiscordJsService from "../../../external/discord.js/discordJS.service";
 import GuildRepository from "../../guild.repository";
 import GuildService from "../../guild.service";
 
@@ -29,28 +29,28 @@ describe("GuildService", () => {
 	describe("registerGuild", () => {
 		it("should return a new guild.", async () => {
 			const returnValue = { id: "123", prefix: "!", language: "en_US", status: "active" };
-			jest.spyOn(repository, "checkIfGuildExistsById").mockReturnValue(Promise.resolve(false));
+			jest.spyOn(repository, "checkIfExistsById").mockReturnValue(Promise.resolve(false));
 			jest.spyOn(discordJs, "verifyIfGuildExists").mockReturnValue(Promise.resolve(true));
-			jest.spyOn(repository, "insertGuild").mockReturnValue(Promise.resolve(returnValue));
+			jest.spyOn(repository, "insert").mockReturnValue(Promise.resolve(returnValue));
 
 			const fakeGuild = await service.registerGuild("123");
 
-			expect(repository.checkIfGuildExistsById).toBeCalledTimes(1);
-			expect(repository.checkIfGuildExistsById).toBeCalledWith("123");
+			expect(repository.checkIfExistsById).toBeCalledTimes(1);
+			expect(repository.checkIfExistsById).toBeCalledWith("123");
 			expect(discordJs.verifyIfGuildExists).toBeCalledTimes(1);
 			expect(discordJs.verifyIfGuildExists).toBeCalledWith("123");
-			expect(repository.insertGuild).toBeCalledTimes(1);
+			expect(repository.insert).toBeCalledTimes(1);
 			expect(fakeGuild).toBe(returnValue);
 		});
 
 		it("should return an error saying that the guild is already registered.", async () => {
-			jest.spyOn(repository, "checkIfGuildExistsById").mockReturnValue(Promise.resolve(true));
+			jest.spyOn(repository, "checkIfExistsById").mockReturnValue(Promise.resolve(true));
 
 			try {
 				await service.registerGuild("1234");
 			} catch (error) {
-				expect(repository.checkIfGuildExistsById).toBeCalledTimes(1);
-				expect(repository.checkIfGuildExistsById).toBeCalledWith("1234");
+				expect(repository.checkIfExistsById).toBeCalledTimes(1);
+				expect(repository.checkIfExistsById).toBeCalledWith("1234");
 				expect(error.response.message).toBe("There is already a guild with this id registered in the system");
 				expect(error.response.statusCode).toBe(422);
 				expect(error.status).toBe(422);
@@ -58,7 +58,7 @@ describe("GuildService", () => {
 		});
 
 		it("should return an error saying the guild doesn't exist on Discord servers.", async () => {
-			jest.spyOn(repository, "checkIfGuildExistsById").mockReturnValue(Promise.resolve(false));
+			jest.spyOn(repository, "checkIfExistsById").mockReturnValue(Promise.resolve(false));
 			jest.spyOn(discordJs, "verifyIfGuildExists").mockReturnValue(Promise.resolve(false));
 
 			try {

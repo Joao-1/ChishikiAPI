@@ -24,13 +24,13 @@ describe("GuildRepository", () => {
 	});
 
 	it("should return an error when trying to insert a new record into the database.", async () => {
-		const err = "GuildRepository.insertGuild error";
+		const err = "GuildRepository.insert error";
 		jest.spyOn(prisma.guild, "create").mockImplementation(() => {
 			throw new Error(err);
 		});
 
 		try {
-			await repository.insertGuild("123");
+			await repository.insert("123");
 		} catch (error) {
 			expect(prisma.guild.create).toBeCalledTimes(1);
 			expect(prisma.guild.create).toBeCalledWith({ data: { id: "123" } });
@@ -41,13 +41,13 @@ describe("GuildRepository", () => {
 	});
 
 	it("should return an error when trying to verify the existence of some guild by id.", async () => {
-		const err = "GuildRepository.checkIfGuildExistsById error";
+		const err = "GuildRepository.checkIfExistsById error";
 		jest.spyOn(prisma.guild, "findFirst").mockImplementation(() => {
 			throw new Error(err);
 		});
 
 		try {
-			await repository.checkIfGuildExistsById("1234");
+			await repository.checkIfExistsById("1234");
 		} catch (error) {
 			expect(prisma.guild.findFirst).toBeCalledTimes(1);
 			expect(prisma.guild.findFirst).toBeCalledWith({ where: { id: "1234" } });

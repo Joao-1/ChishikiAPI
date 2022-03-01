@@ -7,21 +7,23 @@
 	"license": "UNLICENSED",
 	"scripts": {
 		"migrate:dev": "dotenv -e .env.dev -- npx prisma migrate deploy",
-		"migrate:test": "dotenv -e .env.test -- npx prisma migrate deploy",
+		"migrate:test": "dotenv -e .env.test -- npx prisma migrate deploy -- npx prisma db push",
 		"migrate:prod": "dotenv -e .env.prod -- npx prisma migrate deploy",
 		"prebuild": "rimraf dist",
 		"build": "nest build",
 		"format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
 		"start": "nest start",
-		"start:dev": "yarn migrate:dev && SET NODE_ENV=dev && nest start --watch",
+		"start:dev": "yarn migrate:dev && NODE_ENV=dev nest start --watch",
 		"start:debug": "nest start --debug --watch",
 		"start:prod": "yarn migrate:prod && node dist/src/main",
 		"lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
 		"test": "jest",
-		"test:watch": "jest --watch",
-		"test:cov": "yarn migrate:test && set NODE_ENV=test && jest --coverage",
+		"test:watch": "yarn migrate:test && NODE_ENV=test jest --watch",
+		"test:cov": "yarn migrate:test && NODE_ENV=test && jest --coverage",
 		"test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-		"test:e2e": "jest --config ./test/jest-e2e.json"
+		"test:e2e": "jest --config ./test/jest-e2e.json",
+		"prisma:generate:dev": "dotenv -e .env.dev -- npx prisma generate",
+		"prisma:studio": "dotenv -e .env.dev -- npx prisma studio"
 	},
 	"dependencies": {
 		"@discordjs/rest": "^0.3.0",
@@ -38,6 +40,7 @@
 		"eslint-config-airbnb-base": "^15.0.0",
 		"eslint-plugin-import": "^2.25.2",
 		"express": "^4.17.2",
+		"prisma": "^3.10.0",
 		"reflect-metadata": "^0.1.13",
 		"rimraf": "^3.0.2",
 		"rxjs": "^7.2.0"
