@@ -5,18 +5,24 @@ import DiscordJSModule from "../external/discord.js/discordJS.module";
 import GuildController from "./guild.controller";
 import GuildRepository from "./guild.repository";
 import GuildService from "./guild.service";
-import { _IGuildService } from "./structure";
+import { _IGuildRepository, _IGuildService } from "./structure";
+
+const providers = [
+	{
+		useClass: GuildService,
+		provide: _IGuildService,
+	},
+	{
+		useClass: GuildRepository,
+		provide: _IGuildRepository,
+	},
+];
 
 @Module({
 	imports: [ConfigModule, DiscordJSModule, PrismaModule],
 	controllers: [GuildController],
-	providers: [
-		{
-			useClass: GuildService,
-			provide: _IGuildService,
-		},
-		GuildRepository,
-	],
+	providers,
+	exports: providers,
 })
 // eslint-disable-next-line prettier/prettier
 export default class GuildModule { }

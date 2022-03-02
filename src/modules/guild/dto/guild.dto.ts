@@ -1,5 +1,5 @@
 // eslint-disable-next-line max-classes-per-file
-import { IsIn, IsNotEmpty, IsNumberString, IsOptional } from "class-validator";
+import { IsArray, IsNotEmpty, IsNumberString, IsOptional } from "class-validator";
 
 export class RegisterGuildDTO {
 	@IsNotEmpty()
@@ -11,11 +11,11 @@ export class GetGuildDTO {
 	@IsOptional()
 	offset: string;
 
-	@IsOptional()
 	@IsNumberString()
+	@IsOptional()
 	limit: string;
 
-	@IsIn(["commands"])
+	@IsArray()
 	@IsOptional()
 	include: string[];
 }

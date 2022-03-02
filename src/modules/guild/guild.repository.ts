@@ -2,9 +2,10 @@ import { Injectable } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
 import { DataBaseError } from "../../common/exceptions/serverErros";
 import PrismaService from "../../providers/prisma/prisma.service";
+import { IGuildRepository } from "./structure";
 
 @Injectable()
-export default class GuildRepository {
+export default class GuildRepository implements IGuildRepository {
 	// eslint-disable-next-line prettier/prettier
 	constructor(public prisma: PrismaService) { }
 

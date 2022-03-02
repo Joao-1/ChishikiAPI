@@ -1,8 +1,9 @@
 import { INestApplication } from "@nestjs/common";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Test } from "@nestjs/testing";
-import AppModule from "../../../app.module";
-import DiscordJsService from "../../external/discord.js/discordJS.service";
+import AppModule from "../../../../app.module";
+import DiscordJsService from "../discordJS.service";
+import { _IDiscordJsService } from "../structure";
 /* eslint-disable no-undef */
 describe("DiscordJsService", () => {
 	let app: INestApplication;
@@ -13,7 +14,7 @@ describe("DiscordJsService", () => {
 			imports: [AppModule],
 		}).compile();
 
-		discordJs = moduleFixture.get<DiscordJsService>(DiscordJsService);
+		discordJs = moduleFixture.get<DiscordJsService>(_IDiscordJsService);
 		app = moduleFixture.createNestApplication();
 		await app.init();
 	});

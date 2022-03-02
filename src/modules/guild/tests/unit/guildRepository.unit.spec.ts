@@ -4,6 +4,7 @@ import { Test } from "@nestjs/testing";
 import AppModule from "../../../../app.module";
 import PrismaService from "../../../../providers/prisma/prisma.service";
 import GuildRepository from "../../guild.repository";
+import { _IGuildRepository } from "../../structure";
 
 /* eslint-disable no-undef */
 describe("GuildRepository", () => {
@@ -16,7 +17,7 @@ describe("GuildRepository", () => {
 			imports: [AppModule],
 		}).compile();
 
-		repository = moduleFixture.get<GuildRepository>(GuildRepository);
+		repository = moduleFixture.get<GuildRepository>(_IGuildRepository);
 		prisma = moduleFixture.get<PrismaService>(PrismaService);
 		app = moduleFixture.createNestApplication();
 

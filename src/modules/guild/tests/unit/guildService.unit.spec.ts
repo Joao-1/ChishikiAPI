@@ -3,8 +3,10 @@ import { INestApplication } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
 import AppModule from "../../../../app.module";
 import DiscordJsService from "../../../external/discord.js/discordJS.service";
+import { _IDiscordJsService } from "../../../external/discord.js/structure";
 import GuildRepository from "../../guild.repository";
 import GuildService from "../../guild.service";
+import { _IGuildRepository, _IGuildService } from "../../structure";
 
 /* eslint-disable no-undef */
 describe("GuildService", () => {
@@ -18,9 +20,9 @@ describe("GuildService", () => {
 			imports: [AppModule],
 		}).compile();
 
-		service = moduleFixture.get<GuildService>(GuildService);
-		repository = moduleFixture.get<GuildRepository>(GuildRepository);
-		discordJs = moduleFixture.get<DiscordJsService>(DiscordJsService);
+		service = moduleFixture.get<GuildService>(_IGuildService);
+		repository = moduleFixture.get<GuildRepository>(_IGuildRepository);
+		discordJs = moduleFixture.get<DiscordJsService>(_IDiscordJsService);
 		app = moduleFixture.createNestApplication();
 
 		await app.init();

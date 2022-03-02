@@ -1,13 +1,14 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
+import { Prisma } from "@prisma/client";
 import { RegisterGuildErrors } from "../../common/exceptions/htttpExceptions";
-import DiscordJsService from "../external/discord.js/discordJS.service";
+import { IDiscordJsService, _IDiscordJsService } from "../external/discord.js/structure";
 import { GetGuildDTO } from "./dto/guild.dto";
-import GuildRepository from "./guild.repository";
+import { IGuildRepository, IGuildService, _IGuildRepository } from "./structure";
 
 @Injectable()
-export default class GuildService {
+export default class GuildService implements IGuildService {
 	// eslint-disable-next-line prettier/prettier
-	constructor(private guildRepository: GuildRepository, private discordJsService: DiscordJsService) { }
+	constructor(@Inject(_IGuildRepository) private guildRepository: IGuildRepository, @Inject(_IDiscordJsService) private discordJsService: IDiscordJsService) { }
 
 	async registerGuild(guildId: string) {
 		if (await this.guildRepository.checkIfExistsById(guildId)) {
@@ -22,9 +23,26 @@ export default class GuildService {
 	}
 
 	async getGuilds(clientArgs: GetGuildDTO) {
+		let include: Prisma.GuildInclude;
+
+		const filtersConfig: { [key: string]: any } = {
+			include: () => {
+				include = {
+					commands: clientArgs.include.some((value) => value === "commands"),
+				};
+			},
+		};
+
+		for (const requestFilters in clientArgs) {
+			if (Object.prototype.hasOwnProperty.call(filtersConfig, requestFilters)) {
+				filtersConfig[requestFilters]();
+			}
+		}
+
 		return this.guildRepository.read({
 			skip: parseInt(clientArgs.offset, 10) || 0,
 			take: parseInt(clientArgs.limit, 10) || 99,
+			include,
 		});
 	}
 }
