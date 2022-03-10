@@ -10,6 +10,7 @@
 		"migrate:test": "dotenv -e .env.test -- npx prisma migrate deploy -- npx prisma db push",
 		"migrate:prod": "dotenv -e .env.prod -- npx prisma migrate deploy",
 		"prisma:generate:dev": "dotenv -e .env.dev -- npx prisma generate",
+		"prisma:migrate:dev": "dotenv -e .env.dev -- npx prisma migrate dev",
 		"prisma:studio": "dotenv -e .env.dev -- npx prisma studio",
 		"prebuild": "rimraf dist",
 		"build": "nest build",

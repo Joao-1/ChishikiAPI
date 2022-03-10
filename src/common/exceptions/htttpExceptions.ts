@@ -26,3 +26,29 @@ export namespace RegisterGuildErrors {
 		}
 	}
 }
+
+export namespace RegisterCommandErrors {
+	export class CommandWithIdDoesNotExistsInDiscord extends HttpException {
+		constructor() {
+			super(
+				{
+					statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+					message: "Command does not exist on Discord servers",
+				},
+				HttpStatus.UNPROCESSABLE_ENTITY
+			);
+		}
+	}
+
+	export class CommandWithIdAlreadyExists extends HttpException {
+		constructor() {
+			super(
+				{
+					statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+					message: "There is already a command with this id registered in the system",
+				},
+				HttpStatus.UNPROCESSABLE_ENTITY
+			);
+		}
+	}
+}

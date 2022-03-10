@@ -2,19 +2,19 @@ import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import PrismaModule from "../../providers/prisma/prisma.module";
 import DiscordJSModule from "../external/discord.js/discordJS.module";
-import GuildController from "./guild.controller";
-import GuildRepository from "./guild.repository";
-import GuildService from "./guild.service";
-import { _IGuildRepository, _IGuildService } from "./structure";
+import GuildController from "./guilds.controller";
+import GuildRepository from "./guilds.repository";
+import GuildService from "./guilds.service";
+import { _IGuildsRepository, _IGuildsService } from "./structure";
 
 const providers = [
 	{
 		useClass: GuildService,
-		provide: _IGuildService,
+		provide: _IGuildsService,
 	},
 	{
 		useClass: GuildRepository,
-		provide: _IGuildRepository,
+		provide: _IGuildsRepository,
 	},
 ];
 

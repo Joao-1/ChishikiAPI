@@ -16,28 +16,22 @@ model Guild {
   language String?                  @default("en-US")
   status   String?                  @default("active")
   commands GuildCommands[]
-
-  @@map("guilds")
 }
 
 model Command {
-  id                    Int                     @id @default(autoincrement())
+  id                    String                  @id 
   name                  String
   description           String
   status                String                  @default("disabled")
-  type                  String
-  DiscordServerCommands GuildCommands[]
-
-  @@map("commands")
+  scope                 String
+  GuildsCommands GuildCommands[]
 }
 
 model GuildCommands {
   discordServer    Guild  @relation(fields: [discordServerId], references: [id])
   discordServerId  String
   discordCommand   Command @relation(fields: [discordCommandId], references: [id])
-  discordCommandId Int
+  discordCommandId String
 
   @@id([discordServerId, discordCommandId])
-  
-  @@map("guildcommands")
 }

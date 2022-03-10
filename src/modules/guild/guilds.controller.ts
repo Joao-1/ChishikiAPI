@@ -1,12 +1,12 @@
 import { Body, Controller, Get, Inject, Post, Query, Res, ValidationPipe } from "@nestjs/common";
 import { Response } from "express";
-import { GetGuildDTO, RegisterGuildDTO } from "./dto/guild.dto";
-import { IGuildService, _IGuildService } from "./structure";
+import { GetGuildDTO, RegisterGuildDTO } from "./dto/guilds.dto";
+import { IGuildsController, IGuildsService, _IGuildsService } from "./structure";
 
-@Controller("guild")
-export default class GuildController {
+@Controller("guilds")
+export default class GuildController implements IGuildsController {
 	// eslint-disable-next-line prettier/prettier
-	constructor(@Inject(_IGuildService) private guildService: IGuildService) { }
+	constructor(@Inject(_IGuildsService) private guildService: IGuildsService) { }
 
 	@Post()
 	async post(@Body(new ValidationPipe()) registerGuild: RegisterGuildDTO, @Res() res: Response) {
