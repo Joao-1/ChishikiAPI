@@ -1,7 +1,6 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import PrismaModule from "../../providers/prisma/prisma.module";
-import DiscordJSModule from "../external/discord.js/discordJS.module";
 import GuildController from "./guilds.controller";
 import GuildRepository from "./guilds.repository";
 import GuildService from "./guilds.service";
@@ -19,7 +18,7 @@ const providers = [
 ];
 
 @Module({
-	imports: [ConfigModule, DiscordJSModule, PrismaModule],
+	imports: [ConfigModule, PrismaModule],
 	controllers: [GuildController],
 	providers,
 	exports: providers,

@@ -25,11 +25,7 @@ export default class GuildRepository implements IGuildsRepository {
 		try {
 			return this.prisma.guild.findMany(findManyArgs);
 		} catch (error) {
-			throw new DataBaseError(
-				"An error occurred while trying to check if a guild exists by Id",
-				error,
-				"GuildRepository"
-			);
+			throw new DataBaseError("An error occurred while trying to read a guild", error, "GuildRepository");
 		}
 	}
 

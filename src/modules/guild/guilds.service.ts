@@ -1,29 +1,24 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
 import { RegisterGuildErrors } from "../../common/exceptions/htttpExceptions";
-import { IDiscordJsService, _IDiscordJsService } from "../external/discord.js/structure";
 import { GetGuildDTO } from "./dto/guilds.dto";
 import { IGuildsRepository, IGuildsService, _IGuildsRepository } from "./structure";
 
 @Injectable()
 export default class GuildService implements IGuildsService {
 	// eslint-disable-next-line prettier/prettier
-	constructor(@Inject(_IGuildsRepository) private guildRepository: IGuildsRepository, @Inject(_IDiscordJsService) private discordJsService: IDiscordJsService) { }
+	constructor(@Inject(_IGuildsRepository) private guildRepository: IGuildsRepository) { }
 
 	async registerGuild(guildId: string) {
 		if (await this.guildRepository.checkIfExistsById(guildId)) {
 			throw new RegisterGuildErrors.GuildWithIdAlreadyExists();
 		}
 
-		if (!(await this.discordJsService.verifyIfGuildExists(guildId))) {
-			throw new RegisterGuildErrors.GuildWithIdDoesNotExistsInDiscord();
-		}
-
 		return this.guildRepository.insert(guildId);
 	}
 
 	async getGuilds(clientArgs: GetGuildDTO) {
-		let include: Prisma.GuildInclude = {};
+		let include: Prisma.GuildInclude;
 
 		const filtersConfig: { [key: string]: any } = {
 			include: () => {

@@ -19,8 +19,8 @@ model Guild {
 }
 
 model Command {
-  id                    String                  @id 
-  name                  String
+  id   Int                                      @id @default(autoincrement())
+  name                  String                  @unique
   description           String
   status                String                  @default("disabled")
   scope                 String
@@ -31,7 +31,7 @@ model GuildCommands {
   discordServer    Guild  @relation(fields: [discordServerId], references: [id])
   discordServerId  String
   discordCommand   Command @relation(fields: [discordCommandId], references: [id])
-  discordCommandId String
+  discordCommandId Int
 
   @@id([discordServerId, discordCommandId])
 }

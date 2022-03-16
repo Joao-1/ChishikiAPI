@@ -7,7 +7,7 @@ export namespace RegisterGuildErrors {
 			super(
 				{
 					statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
-					message: "Guild access with this id is unauthorized or does not exist on Discord servers",
+					message: "Guild with this id is unauthorized or does not exist on Discord servers",
 				},
 				HttpStatus.UNPROCESSABLE_ENTITY
 			);
@@ -33,7 +33,7 @@ export namespace RegisterCommandErrors {
 			super(
 				{
 					statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
-					message: "Command does not exist on Discord servers",
+					message: "Command does not exist on Discord servers or missing access",
 				},
 				HttpStatus.UNPROCESSABLE_ENTITY
 			);

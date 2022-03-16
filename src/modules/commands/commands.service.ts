@@ -1,24 +1,25 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { RegisterCommandErrors } from "../../common/exceptions/htttpExceptions";
-import { IDiscordJsService, _IDiscordJsService } from "../external/discord.js/structure";
+import { GetCommandDTO } from "./dto/commands.dto";
 import { ICommandsRepository, ICommandsService, _ICommandsRepository } from "./structure";
 
 @Injectable()
 export default class CommandsService implements ICommandsService {
 	// eslint-disable-next-line prettier/prettier
-	constructor(@Inject(_ICommandsRepository) private commandsRepository: ICommandsRepository, @Inject(_IDiscordJsService) private discordJsService: IDiscordJsService) { }
+	constructor(@Inject(_ICommandsRepository) private commandsRepository: ICommandsRepository) { }
 
-	async registerCommand(commandId: string, scope: string) {
-		if (await this.commandsRepository.checkIfExistsById(commandId)) {
+	async registerCommand(commandName: string, commandDescription: string, scope: string) {
+		if (await this.commandsRepository.checkIfExistsByName(commandName)) {
 			throw new RegisterCommandErrors.CommandWithIdAlreadyExists();
 		}
 
-		const command = await this.discordJsService.getDiscordCommand(commandId);
+		return this.commandsRepository.insert(commandName, commandDescription, scope);
+	}
 
-		if (!command) {
-			throw new RegisterCommandErrors.CommandWithIdDoesNotExistsInDiscord();
-		}
-
-		return this.commandsRepository.insert(commandId, command.name, command.description, scope);
+	async getCommands(clientArgs: GetCommandDTO) {
+		return this.commandsRepository.read({
+			skip: parseInt(clientArgs.offset, 10) || 0,
+			take: parseInt(clientArgs.limit, 10) || 99,
+		});
 	}
 }
