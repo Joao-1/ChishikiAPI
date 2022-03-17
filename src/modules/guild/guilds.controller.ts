@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, Post, Query, Req, Res, ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Get, Inject, Post, Query, Res, ValidationPipe } from "@nestjs/common";
 import { Response } from "express";
 import { GetGuildDTO, RegisterGuildDTO } from "./dto/guilds.dto";
 import { IGuildsController, IGuildsService, _IGuildsService } from "./structure";
@@ -18,10 +18,5 @@ export default class GuildController implements IGuildsController {
 	async read(@Query(new ValidationPipe()) getGuilds: GetGuildDTO, @Res() res: Response) {
 		const guilds = await this.guildService.getGuilds(getGuilds);
 		res.status(200).json({ status: "success", guilds });
-	}
-
-	@Get("batata")
-	async batata(@Req() req) {
-		console.log(req);
 	}
 }

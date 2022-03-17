@@ -5,7 +5,7 @@ import { GetGuildDTO, RegisterGuildDTO } from "./dto/guilds.dto";
 
 export interface IGuildsController {
 	post(registerGuild: RegisterGuildDTO, res: Response): Promise<void>;
-	read(getGuilds: GetGuildDTO, res: Response): Promise<void>;
+	read(getGuilds: GetGuildDTO, res: Response, req): Promise<void>;
 }
 
 export const _IGuildsService = "IGUILDSSERVICE";

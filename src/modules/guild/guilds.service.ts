@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
-import { RegisterGuildErrors } from "../../common/exceptions/htttpExceptions";
+import { RegisterGuildErrors } from "../../common/exceptions/httpExceptions";
 import { GetGuildDTO } from "./dto/guilds.dto";
 import { IGuildsRepository, IGuildsService, _IGuildsRepository } from "./structure";
 

@@ -40,12 +40,12 @@ export namespace RegisterCommandErrors {
 		}
 	}
 
-	export class CommandWithIdAlreadyExists extends HttpException {
+	export class CommandWithNameAlreadyExists extends HttpException {
 		constructor() {
 			super(
 				{
 					statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
-					message: "There is already a command with this id registered in the system",
+					message: "There is already a command with this name registered in the system",
 				},
 				HttpStatus.UNPROCESSABLE_ENTITY
 			);
