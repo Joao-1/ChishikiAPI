@@ -3,8 +3,16 @@ version: "3"
 services:
     app:
         build: .
-        command: yarn start:dev
         container_name: chishikiapi
+        environment:
+            - port=${PORT}
+            - DATABASE_URL=postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@chishikidb:5432/chishikidb
+            - DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
+            - DATABASE_USER=${DATABASE_USER}
+            - DATABASE_DB=${DATABASE_DB}
+            - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+        depends_on:
+            - chishikidb
         ports:
             - 3000:3000
         volumes:

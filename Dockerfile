@@ -1,18 +1,24 @@
-FROM node:alpine
+# build
+FROM node:18-alpine AS builder
 
-WORKDIR /usr/app
+WORKDIR /build
 
-COPY package.json . 
-COPY yarn.lock .
-COPY tsconfig.json .
-RUN yarn
+COPY package.json .
+COPY prisma ./prisma/
+
+RUN yarn 
 
 COPY . .
 
 RUN yarn build
 
-EXPOSE 3000
+FROM node:18-alpine as production
 
-RUN apk add --no-cache bash
+WORKDIR /app
 
-CMD ["yarn", "start:prod"]
+COPY --from=builder /build/node_modules ./node_modules
+COPY --from=builder /build/package*.json ./
+COPY --from=builder /build/dist ./dist
+COPY --from=builder /build/prisma ./prisma
+
+CMD [ "yarn", "start:prod" ]

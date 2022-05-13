@@ -5,7 +5,6 @@ import { IGuildsController, IGuildsService, _IGuildsService } from "./structure"
 
 @Controller("guilds")
 export default class GuildController implements IGuildsController {
-	// eslint-disable-next-line prettier/prettier
 	constructor(@Inject(_IGuildsService) private guildService: IGuildsService) { }
 
 	@Post()
