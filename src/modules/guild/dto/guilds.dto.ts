@@ -9,13 +9,13 @@ export class RegisterGuildDTO {
 export class GetGuildDTO {
 	@IsNumberString()
 	@IsOptional()
-	offset: string;
+	offset?: string;
 
 	@IsNumberString()
 	@IsOptional()
-	limit: string;
+	limit?: string;
 
 	@IsArray()
 	@IsOptional()
-	include: string[];
+	include?: string[];
 }
