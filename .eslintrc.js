@@ -25,5 +25,6 @@ module.exports = {
 		"no-useless-constructor": "off",
 		"no-empty-function": ["error", { allow: ["constructors"] }],
 		"no-unused-vars": "off",
+		"no-plusplus": [2, { allowForLoopAfterthoughts: true }],
 	},
 };
